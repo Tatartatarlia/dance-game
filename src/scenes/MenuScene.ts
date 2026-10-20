@@ -11,6 +11,7 @@ export class MenuScene extends Phaser.Scene {
   }
 
   create(): void {
+    this.starting = false;
     paintStage(this);
     this.cameras.main.fadeIn(220);
     this.input.mouse?.disableContextMenu();
@@ -80,10 +81,15 @@ export class MenuScene extends Phaser.Scene {
       .setOrigin(0.5)
       .setDepth(10);
 
-    makeButton(this, 270, 800, "开始试玩", () => {
+    makeButton(this, 270, 800, "开始游戏", () => {
       if (this.starting) return;
       this.starting = true;
-      void audio.unlock().then(() => this.scene.start("play"));
+      void audio
+        .unlock()
+        .then(() => this.scene.start("play"))
+        .catch(() => {
+          this.starting = false;
+        });
     });
 
     this.add
